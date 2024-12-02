@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
-import { Observable, of, switchMap } from 'rxjs';
+import { catchError, Observable, of, switchMap } from 'rxjs';
 import { EChartsOption } from 'echarts';
 import {environment} from '../../environments/environment'
 interface IPresets {
@@ -96,7 +96,8 @@ export class ChartDataHandlerService {
           ],
         }
         return of(newOptions);
-      })
+      }),
+
     )
   }
   reverseChart (chartOptions:EChartsOption):EChartsOption { //смена осей графика

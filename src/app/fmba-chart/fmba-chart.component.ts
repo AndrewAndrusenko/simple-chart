@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { EChartsOption } from 'echarts';
 import { ChartDataHandlerService } from '../chart-data-handler.service';
+import { catchError, EMPTY, filter, of, Subscription, throwError } from 'rxjs';
 
 @Component({
   selector: 'app-fmba-chart',
@@ -14,6 +15,8 @@ export class FmbaChartComponent {
   public axises:string[]=[]; // список осей графика, которые можно менять местами
   public symbols:string[]=  ['circle', 'rect', 'roundRect', 'triangle', 'diamond', 'pin', 'arrow', 'none']; // символы точек графика
   public newColor:string =''; // выбор цвета графика
+  private subscriptions = new Subscription
+  public errorMsg = ''
   constructor(
     private fb:FormBuilder,
     private handlerService:ChartDataHandlerService
@@ -26,13 +29,26 @@ export class FmbaChartComponent {
       chartName:[],
     })
   }
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();    
+  }
   getData (colorChart='#4d9058',symbolType='none') { //запрос данных с тестового сервера и обновление форма управления графиком после получения данных
-    this.handlerService.prepareChartOptions(colorChart,symbolType).subscribe(newOption=>{
-      this.chartOption=newOption.chartOptions;
-      this.chartForm.patchValue(newOption.presets)
-      this.newColor = this.color?.value
-      this.axises = [newOption.presets.xAxisName||'',newOption.presets.yAxisName||'']
-    })
+    this.errorMsg = '';
+    this.subscriptions.add (
+        this.handlerService.prepareChartOptions(colorChart,symbolType).
+        pipe (    
+          catchError((err)=>{
+          this.errorMsg = err.message
+          return throwError(()=> (err))
+        }
+        ))
+        .subscribe(newOption=>{
+        this.chartOption=newOption.chartOptions;
+        this.chartForm.patchValue(newOption.presets)
+        this.newColor = this.color?.value
+        this.axises = [newOption.presets.xAxisName||'',newOption.presets.yAxisName||'']
+      })
+    )
   }
   changeColor () { // смена цвета графика
     this.chartOption = {...structuredClone (this.chartOption),color : this.newColor};

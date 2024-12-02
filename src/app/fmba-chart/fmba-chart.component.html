@@ -1,4 +1,5 @@
 <div class="container">
+  <span *ngIf="errorMsg" style="color: rgb(219, 58, 58);" >{{errorMsg}}</span>
   <form [formGroup]="chartForm" class="form-main">
     <button mat-raised-button (click)="getData()" class="form-main__submitButton">Get Data</button>
     <div class="form-main__data-fields">
