@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
-import { catchError, Observable, of, switchMap } from 'rxjs';
-import { EChartsOption } from 'echarts';
-import {environment} from '../../environments/environment'
+import { Observable, of, switchMap } from 'rxjs';
+import { environment} from '../../environments/environment'
+import { EChartsOption, LegendComponentOption, SeriesOption, XAXisComponentOption, YAXisComponentOption } from 'echarts/types/dist/echarts';
+type XAXisComponentOptionCR = XAXisComponentOption & {
+  data:number[]
+}
 interface IPresets {
   color?:string;
   symbol?:string;
@@ -101,15 +104,16 @@ export class ChartDataHandlerService {
     )
   }
   reverseChart (chartOptions:EChartsOption):EChartsOption { //смена осей графика
-    let newOption = structuredClone(chartOptions as any );
-    [newOption.series[0].data, newOption.xAxis.data] = [newOption.xAxis.data ,newOption.series[0].data]
-    let xName = newOption.xAxis.name;
-    newOption.xAxis.name = newOption.yAxis.name ;
-    newOption.yAxis.name = xName;
-    newOption.series[0].name = newOption.yAxis.name;
-    newOption.legend.data =[ newOption.yAxis.name] ;
-    newOption.yAxis.min = Math.min (...newOption.series[0].data);
-    newOption.yAxis.max = Math.max (...newOption.series[0].data);
+    let newOption = structuredClone(chartOptions);
+    let xAxis = (newOption.xAxis as XAXisComponentOptionCR);
+    let yAxis = (newOption.yAxis as YAXisComponentOption);
+    let series = (newOption.series as SeriesOption[]);
+    [series[0].data, xAxis.data] = [xAxis.data, series[0].data as number[]];
+    [xAxis.name, yAxis.name] = [yAxis.name, xAxis.name] ;
+    series[0].name = yAxis.name;
+    (newOption.legend as LegendComponentOption).data =[yAxis.name as string] ;
+    yAxis.min = Math.min (...series[0].data as number[]);
+    yAxis.max = Math.max (...series[0].data as number[]);
     return newOption
-  }
+  } 
 }

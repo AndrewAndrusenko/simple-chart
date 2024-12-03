@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { EChartsOption } from 'echarts';
-import { ChartDataHandlerService } from '../chart-data-handler.service';
-import { catchError, EMPTY, filter, of, Subscription, throwError } from 'rxjs';
+import { SeriesOption, EChartsOption } from 'echarts/types/dist/echarts';
 
+import { ChartDataHandlerService } from '../chart-data-handler.service';
+import { catchError, Subscription, throwError } from 'rxjs';
+type SeriesOptionCR = SeriesOption & {symbol:string}
 @Component({
   selector: 'app-fmba-chart',
   templateUrl: './fmba-chart.component.html',
@@ -54,8 +55,8 @@ export class FmbaChartComponent {
     this.chartOption = {...structuredClone (this.chartOption),color : this.newColor};
   }
   symbolChange () { // смена символя точки
-    let newOption = structuredClone (this.chartOption as any);
-    newOption.series[0].symbol = this.symbol?.value
+    let newOption = structuredClone (this.chartOption as EChartsOption);
+   (newOption.series as SeriesOptionCR[])[0].symbol = this.symbol?.value
     this.chartOption = newOption
   }
   drawChart (typeAxis:string='x') { // смена осей графика 
