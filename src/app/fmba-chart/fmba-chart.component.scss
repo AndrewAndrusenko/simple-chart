@@ -3,6 +3,9 @@
 }
 
 .container {
+  &__errors {
+   color: rgb(219, 58, 58);
+  }
   .form-main {
     margin-left: 1vw;
     margin-top: 1vh;

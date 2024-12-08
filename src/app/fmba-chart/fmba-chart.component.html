@@ -1,5 +1,5 @@
 <div class="container">
-  <span *ngIf="errorMsg" style="color: rgb(219, 58, 58);" >{{errorMsg}}</span>
+  <span *ngIf="errorMsg" class="container__errors">{{errorMsg}}</span>
   <form [formGroup]="chartForm" class="form-main">
     <button mat-raised-button (click)="getData()" class="form-main__submitButton">Get Data</button>
     <div class="form-main__data-fields">
@@ -18,7 +18,7 @@
         </mat-select>
       </mat-form-field>
       <mat-form-field>
-        <mat-select  formControlName = "symbol" placeholder="Symbol Type" (selectionChange)="chartOption.hasOwnProperty('series')? symbolChange():null">
+        <mat-select  formControlName = "symbol" placeholder="Symbol Type" (selectionChange)="symbolChange($event)">
           <mat-option *ngFor="let symbolType of symbols" [value]="symbolType">
             {{symbolType}}
           </mat-option>
@@ -26,10 +26,10 @@
       </mat-form-field>
       <mat-form-field>
         <input matInput 
-        (colorPickerChange)="chartOption.hasOwnProperty('series')? changeColor():null"
+        (colorPickerChange)="changeColor($event)"
         formControlName="color" 
         placeholder="Select Color" 
-        [(colorPicker)]="newColor" [style.background-color]="newColor" [value]="newColor">
+        [(colorPicker)]="newColor" [style.background-color]="newColor">
       </mat-form-field>
     </div>
   </form>

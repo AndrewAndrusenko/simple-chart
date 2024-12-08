@@ -24,7 +24,9 @@
     "cookie-parser": "^1.4.7",
     "echarts": "^5.4.2",
     "ngx-color-picker": "^14.0.0",
+    "ngx-cookie-service": "^15.0.0",
     "ngx-echarts": "^15.0.3",
+    "ngx-indexed-db": "^16.0.0",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.12.0"

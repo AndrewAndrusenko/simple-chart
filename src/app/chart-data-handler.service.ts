@@ -47,7 +47,7 @@ export class ChartDataHandlerService {
           yAxisName:axisNames[1],
         }
         newOptions.chartOptions ={
-          color:newData.presets.color||colorChart,
+          color:colorChart,
           title: {
             text: newData.presets.chartName||'Data Chart',
             left: 'center',
@@ -93,7 +93,7 @@ export class ChartDataHandlerService {
               data: ySeries,
               type: 'line',
               smooth: true,
-              symbol:newData.presets.symbol||symbolType,
+              symbol:symbolType,
               symbolSize:10
             },
           ],
@@ -108,12 +108,12 @@ export class ChartDataHandlerService {
     let xAxis = (newOption.xAxis as XAXisComponentOptionCR);
     let yAxis = (newOption.yAxis as YAXisComponentOption);
     let series = (newOption.series as SeriesOption[]);
-    [series[0].data, xAxis.data] = [xAxis.data, series[0].data as number[]];
-    [xAxis.name, yAxis.name] = [yAxis.name, xAxis.name] ;
-    series[0].name = yAxis.name;
-    (newOption.legend as LegendComponentOption).data =[yAxis.name as string] ;
-    yAxis.min = Math.min (...series[0].data as number[]);
-    yAxis.max = Math.max (...series[0].data as number[]);
+    [series[0].data, xAxis.data] = [xAxis.data, series[0].data as number[]]; //Data swap between x and y axix
+    [xAxis.name, yAxis.name] = [yAxis.name, xAxis.name] ; //Labels swap between x and y axix
+    series[0].name = yAxis.name; 
+    (newOption.legend as LegendComponentOption).data =[yAxis.name as string] ;  
+    yAxis.min = Math.min (...series[0].data as number[]); //Setting min for y axix
+    yAxis.max = Math.max (...series[0].data as number[]);  //Setting max for y axix
     return newOption
   } 
 }

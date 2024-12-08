@@ -11,10 +11,26 @@ import { MatSelectModule} from '@angular/material/select';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { HttpClientModule } from '@angular/common/http';
+import { DBConfig, NgxIndexedDBModule } from 'ngx-indexed-db';
+import { CookieService } from 'ngx-cookie-service';
+export const IndexDBConfig: DBConfig  = {
+  name: 'fmba',
+  version: 1,
+  objectStoresMeta: [{
+    store: 'fmbaData',
+    storeConfig: { keyPath: 'code', autoIncrement: false },
+    storeSchema: [
+      { name: 'code', keypath: 'code', options: { unique: false } },
+      { name: 'color', keypath: 'color', options: { unique: false } },
+      { name: 'symbol', keypath: 'symbol', options: { unique: false } },
+    ]
+  }]
+};
+
 @NgModule({
   declarations: [
     AppComponent,
-    FmbaChartComponent
+    FmbaChartComponent,
   ],
   imports: [
     BrowserModule,
@@ -26,10 +42,13 @@ import { HttpClientModule } from '@angular/common/http';
     MatFormFieldModule,
     MatSelectModule,
     ColorPickerModule,
-    HttpClientModule
+    HttpClientModule,
+    NgxIndexedDBModule.forRoot(IndexDBConfig),
+    
   ],
   providers: [
-    provideAnimations()
+    provideAnimations(),
+    [CookieService],
   ],
   bootstrap: [AppComponent]
 })
