@@ -36,10 +36,12 @@ export class FmbaChartComponent {
     this.appStorage = this.storageService.initStorageObj(this.storageType); //Storage strategy object is initiated 
   }
   ngOnInit(): void {
-    this.appStorage.getStorageData('simple-chart-preset').subscribe(data=>{
-      this.chartForm.patchValue(data);
-      this.newColor=(data as Ipresets).color;
-    })
+    this.subscriptions.add(
+      this.appStorage.getStorageData('simple-chart-preset').subscribe(data=>{
+        this.chartForm.patchValue(data);
+        this.newColor=(data as Ipresets).color;
+      })
+    )
   }
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();    
@@ -61,7 +63,7 @@ export class FmbaChartComponent {
     )
   }
   savePreset (key:string,data:Ipresets) { //Save user preferences
-    this.appStorage.setStorageData(key,data).subscribe()
+    this.subscriptions.add(this.appStorage.setStorageData(key,data).subscribe());
   }
   changeColor (colorChanged:string) { // смена цвета графика
     this.color?.patchValue(colorChanged);

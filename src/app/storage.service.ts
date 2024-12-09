@@ -58,7 +58,7 @@ class StrategyIndexDB extends Strategy {
 }
 export class AppStorage {
   constructor(private strategy:StrategyIndexDB|StrategyCookie) {
-    this.strategy
+    this.strategy = strategy
   }
   getStorageData (key:string):Observable<Ipresets|Error> {
     return this.strategy.getData(key)
